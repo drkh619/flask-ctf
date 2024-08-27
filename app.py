@@ -34,7 +34,7 @@ def prod():
 
 @app.route("/api/products",methods=['POST'])
 def createProd():
-    new_product = request.json
+    new_product = request.form.to_dict()
 
     data = loadProduct()
     maxid = max(product["id"] for product in data) if data else 0
@@ -42,8 +42,10 @@ def createProd():
 
     data.append(new_product)
     writeProduct(data)
-
-    return jsonify(new_product), 201
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify(new_product), 201
+    else:
+        return redirect(url_for('admin'))
 
 @app.route("/api/products/<int:pid>",methods=['GET'])
 def getProductById(pid):
@@ -94,7 +96,9 @@ def home():
 
 @app.route("/products")
 def products():
-    return render_template('products.html')
+    with open('products.json', 'r') as f:
+        products = json.load(f)
+    return render_template('products.html', products=products)
 
 @app.route("/about")
 def about():
@@ -149,7 +153,8 @@ def edit_products():
 
 @app.route("/delete")
 def delete_products():
-    # return render_template('de.html')
-    return 'delete'
+    with open('products.json', 'r') as f:
+        products = json.load(f)
+    return render_template('admin_delete.html', products=products)
 
 app.run(debug=True)

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>E-Com App | Contact Page</title>
+    <title>E-Com App | Admin Add</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" href="./static/icon.png">
@@ -98,33 +98,33 @@
         </div>
 
         <div class="form-container mx-auto" style="max-width: 500px;">
-            <form>
+            <form action="{{ url_for('createProd') }}" method="post">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" aria-describedby="title">
+                    <input type="text" class="form-control" id="title" name="title" aria-describedby="title">
                     <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Price</label>
                     <div class="input-group">
                     <span class="input-group-text" id="inputGroupPrepend">$</span>
-                    <input type="number" class="form-control number" id="name" ></div>
+                    <input type="number" class="form-control number" name="price" id="price" ></div>
                 </div>
                 <div class="mb-3">
                     <label for="image" class="form-label">Image URL</label>
-                    <input type="text" class="form-control" id="image" aria-describedby="image">
+                    <input type="text" class="form-control" name="image" id="image" aria-describedby="image">
                     <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                 </div>
                 <div class="mb-3">
                     <label for="category" class="form-label">Category</label>
-                    <input type="text" class="form-control" id="category" aria-describedby="category">
+                    <input type="text" class="form-control" name="category" id="category" aria-describedby="category">
                     <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                 </div>
                 <div class="mb-3">
                     <label for="feedback" class="form-label">Description</label>
-                    <textarea class="form-control" id="feedback" rows="3"></textarea>
+                    <textarea class="form-control" id="feedback" name="description" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Submit</button>
+                <button type="submit" class="btn btn-primary w-100">Add</button>
             </form>
         </div>
 
