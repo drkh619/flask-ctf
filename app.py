@@ -1,8 +1,11 @@
-from flask import Flask, jsonify, request, render_template, url_for
+from flask import Flask, jsonify, request, render_template, url_for, redirect, session
+from flask_cors import CORS
 import json
 # import requests
 
 app = Flask(__name__, static_url_path='/static')
+CORS(app)
+app.secret_key = '50M3tH1nG_53cR3T'
 
 def loadProduct():
     # with open('products.json','r', encoding='utf-8') as files:
@@ -14,6 +17,13 @@ def writeProduct(products):
     file = open('products.json','w',encoding='utf-8')
     json.dump(products,file,indent=4)
 
+def load_users():
+    with open('users.json','r', encoding='utf-8') as files:
+        return json.load(files)
+    
+def write_users(users):
+    with open('users.json','w', encoding='utf-8') as files:
+        json.dump(users, files, indent=4)
 
 
 
@@ -94,15 +104,39 @@ def about():
 def contact():
     return render_template('contact.html')
 
-@app.route("/login")
-def admin():
-    # return render_template('admin.html')
-    return 'login'
+@app.route("/login",methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
 
-@app.route("/register")
-def admin():
-    # return render_template('admin.html')
-    return 'register'
+        user = next((user for user in users if user['username'] == username and user['password'] == password), None)
+        if user:
+            session['username'] = user['username']
+            return redirect(url_for('home'))
+        else:
+            return 'Invalid username or password!',401
+    return render_template('login.html')
+
+@app.route("/register",methods=['GET','POST'])
+def register():
+    if request.method == 'POST':
+        new_user = request.form.to_dict()
+        users = load_users()
+
+        if any(user['username'] == new_user['username'] for user in users):
+            return 'User already exist!', 400
+        users.append(new_user)
+        write_users(users)
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route("/logout")
+def logout():
+    session.pop('username',None)
+    return redirect(url_for('login'))
+    
 
 @app.route("/admin")
 def admin():

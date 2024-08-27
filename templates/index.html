@@ -94,6 +94,21 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{url_for('contact')}}">Contact</a>
                         </li>
+                        {% if 'username' in session %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              Login/Register
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
+                              <li><a class="dropdown-item" href="{{ url_for('register') }}">Register</a></li>
+                            </ul>
+                          </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
