@@ -94,6 +94,16 @@ def about():
 def contact():
     return render_template('contact.html')
 
+@app.route("/login")
+def admin():
+    # return render_template('admin.html')
+    return 'login'
+
+@app.route("/register")
+def admin():
+    # return render_template('admin.html')
+    return 'register'
+
 @app.route("/admin")
 def admin():
     return render_template('admin.html')
