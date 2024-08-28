@@ -1,6 +1,8 @@
 [
     {
+        "id": "6756a78e-6501-11ef-ae5d-a05950a73590",
         "username": "test",
-        "password": "test123"
+        "email": "test@test.com",
+        "password": "scrypt:32768:8:1$3IvfyMkjuT7JvPRq$1bcabf4388fbe97640d59f0865049915864cac5754ac4bda9177d514497fb27c6c7b225fd1af138daa5ad8b7d872b3c46a9dfc407059281991e4047adf8e28a0"
     }
 ]

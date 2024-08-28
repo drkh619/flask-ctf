@@ -1,5 +1,7 @@
-from flask import Flask, jsonify, request, render_template, url_for, redirect, session
+from flask import Flask, jsonify, request, render_template, url_for, redirect, session, flash
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
+import uuid
 import json
 # import requests
 
@@ -115,8 +117,8 @@ def login():
         password = request.form['password']
         users = load_users()
 
-        user = next((user for user in users if user['username'] == username and user['password'] == password), None)
-        if user:
+        user = next((user for user in users if user['username'] == username), None)
+        if user and check_password_hash(user['password'],password):
             session['username'] = user['username']
             return redirect(url_for('home'))
         else:
@@ -126,11 +128,17 @@ def login():
 @app.route("/register",methods=['GET','POST'])
 def register():
     if request.method == 'POST':
-        new_user = request.form.to_dict()
+        new_user = {
+            'id': str(uuid.uuid1()),
+            'username': request.form['username'],
+            'email': request.form['email'],
+            'password': generate_password_hash(request.form['password'])
+        }
         users = load_users()
 
         if any(user['username'] == new_user['username'] for user in users):
-            return 'User already exist!', 400
+            flash('Usern already exist!','error')
+            return redirect(url_for('register'))
         users.append(new_user)
         write_users(users)
         return redirect(url_for('login'))
