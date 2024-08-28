@@ -23,6 +23,10 @@ def load_users():
     with open('users.json','r', encoding='utf-8') as files:
         return json.load(files)
     
+def load_admin():
+    with open('admin.json','r', encoding='utf-8') as files:
+        return json.load(files)
+    
 def write_users(users):
     with open('users.json','w', encoding='utf-8') as files:
         json.dump(users, files, indent=4)
@@ -148,6 +152,21 @@ def register():
 def logout():
     session.pop('username',None)
     return redirect(url_for('login'))
+
+@app.route("/admin_login",methods=['GET','POST'])
+def admin_login():
+    if request.method == 'POST':
+        admin_username = request.form['username']
+        password = request.form['password']
+        users = load_admin()
+
+        user = next((user for user in users if user['username'] == admin_username and user['password'] == password), None)
+        if user :
+            session['admin_username'] = user['username']
+            return redirect(url_for('home'))
+        else:
+            return 'Invalid username or password!',401
+    return render_template('admin_login.html')
     
 
 @app.route("/admin")
@@ -165,4 +184,4 @@ def delete_products():
         products = json.load(f)
     return render_template('admin_delete.html', products=products)
 
-app.run(debug=True)
+app.run(debug=True,port=5000,host='0.0.0.0')

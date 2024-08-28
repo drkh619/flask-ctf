@@ -238,17 +238,5 @@
             "rate": 3.6,
             "count": 145
         }
-    },
-    {
-        "title": "Perfectly Round ball",
-        "price": 9.85,
-        "description": "Perfectly round ball which is used for throwing around, and playing with dogs",
-        "category": "Accessories",
-        "image": "https://fakestoreapi.com/img/71z3kpMAYsL._AC_UY879_.jpg",
-        "rating": {
-            "rate": 4.7,
-            "count": 130
-        },
-        "id": 21
     }
 ]
