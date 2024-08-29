@@ -5,7 +5,7 @@
     {% if 'admin_username' in session %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>E-Com App | Admin Add</title>
+    <title>E-Com App | Contact Page</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" href="./static/icon.png">
@@ -55,24 +55,19 @@
         .form-text {
             color: #6c757d;
         }
-
-        .form-control[type=number]::-webkit-outer-spin-button,
-        .form-control[type=number]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
     </style>
 </head>
 
 <body>
+
 
     <div class="container">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{url_for('home')}}">E-Com App</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -101,90 +96,106 @@
             </div>
         </nav>
         <div class="header text-center">
-            <h1>Admin Page</h1>
-            <p>Add Product</p>
+            <h1>Edit Product</h1>
         </div>
 
-        <div class="form-container mx-auto" style="max-width: 500px;">
-            <form action="{{ url_for('createProd') }}" method="post" class="needs-validation" novalidate>
+        <form action="{{ url_for('updateProductById', pid=product.id) }}" method="post" id="updateProductForm">
+            <div class="form-container mx-auto" style="max-width: 500px;">
+
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" aria-describedby="title" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid title.
-                    </div>
-                    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                    <input type="text" class="form-control" id="title" name="title" value="{{ product.title }}"
+                        aria-describedby="title" required>
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Price</label>
                     <div class="input-group">
                         <span class="input-group-text" id="inputGroupPrepend">$</span>
-                        <input type="number" class="form-control number" name="price" step="0.01" id="price" required>
-                        <div class="invalid-feedback">
-                            Please provide a valid price.
-                        </div>
+                        <input type="text" class="form-control" id="price" name="price" value="{{ product.price }}"
+                            required>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="image" class="form-label">Image URL</label>
-                    <input type="text" class="form-control" name="image" id="image" aria-describedby="image" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid image URL.
-                    </div>
-                    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                 </div>
                 <div class="mb-3">
                     <label for="category" class="form-label">Category</label>
-                    <input type="text" class="form-control" name="category" id="category" aria-describedby="category" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid category.
-                    </div>
-                    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                    <input type="text" class="form-control" id="category" name="category" value="{{ product.category }}"
+                        aria-describedby="title" required>
                 </div>
                 <div class="mb-3">
-                    <label for="feedback" class="form-label">Description</label>
-                    <textarea class="form-control" id="description name="description" rows="3" required></textarea>
-                    <div class="invalid-feedback">
-                        Please provide a valid description.
-                    </div>
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" rows="3" name="description"
+                        required>{{ product.description }}</textarea>
                 </div>
-                <button type="submit" class="btn btn-primary w-100" onclick>Add</button>
-                {% if get_flashed_messages() %}
-                <div class="alert alert-success mt-3">
-                    {% for messages in get_flashed_messages() %}
-                        {{ messages }}
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </form>
-        </div>
+                <button type="submit" class="btn btn-primary w-100" id="submitButton">Submit</button>
+                <span id="alert">
+
+                </span>
+    
+
+            </div>
+        </form>
+        <script>
+
+            function alertBox() {
+                const alertPlaceholder = document.getElementById('alert');
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = [
+                    '<div class="alert alert-success alert-dismissible mt-3" role="alert">',
+                    '  <div>Product updated successfully!</div>',
+                    '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                    '</div>'
+                ].join('');
+
+                alertPlaceholder.append(wrapper);
+
+                const alertElement = alertPlaceholder.querySelector('.alert');
+                alertElement.style.display = 'block'; // Show the alert initially
+                setTimeout(() => {
+                    alertElement.classList.remove('show');
+                    setTimeout(() => {
+                        alertElement.remove();
+                    }, 500); // Adjust the delay as needed
+                }, 3000); // Adjust the duration as needed
+
+            }
+            // Get the form element by its ID
+            const updateProductForm = document.getElementById('updateProductForm');
+
+            // Add an event listener for form submission
+            updateProductForm.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+                formD = new FormData(updateProductForm)
+                console.log(formD.get('title'))
+                // Change the method to PUT before submitting
+                // updateProductForm.method = 'PUT';
+
+                // Submit the form using fetch or another preferred method
+                const response = await fetch(updateProductForm.action, {
+                    method: 'PUT',
+                    body: new FormData(updateProductForm), // Send form data
+                });
+
+                // Handle the response based on success or failure
+                if (response.ok) {
+                    alertBox()
+                    // Product updated successfully
+                    console.log('Product updated successfully');
+                    // Update UI or redirect to success page
+                } else {
+                    // Handle errors
+                    console.error('Error updating product:', await response.text());
+                }
+            });
+        </script>
 
     </div>
-    <script>
-        (() => {
-            'use strict'
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            const forms = document.querySelectorAll('.needs-validation')
-            // Loop over them and prevent submission
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        })()
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         </script>
-    {% else %}
-    <script>
-        window.location.href = "{{ url_for('admin_login') }}"
-    </script>
-    {% endif %}
+        {% else %}
+        <script>
+            window.location.href = "{{ url_for(admin_login) }}"
+        </script>
+        {% endif %}
 </body>
 
 </html>

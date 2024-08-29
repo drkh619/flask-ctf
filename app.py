@@ -41,6 +41,7 @@ def prod():
 @app.route("/api/products",methods=['POST'])
 def createProd():
     new_product = request.form.to_dict()
+    new_product['price'] = float(new_product['price'])
 
     data = loadProduct()
     maxid = max(product["id"] for product in data) if data else 0
@@ -51,7 +52,8 @@ def createProd():
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return jsonify(new_product), 201
     else:
-        return redirect(url_for('admin'))
+        flash('Product created successfully!','message')
+        return render_template('admin.html')
 
 @app.route("/api/products/<int:pid>",methods=['GET'])
 def getProductById(pid):
@@ -75,10 +77,15 @@ def updateProductById(pid):
             break
 
     if prod:
-        updated_prod = request.json
+        updated_prod = request.form.to_dict()
+        updated_prod['price'] = float(updated_prod['price'])
         prod.update(updated_prod)
         writeProduct(products)
-        return jsonify(updated_prod)
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify(updated_prod)
+        else:
+            # flash('Product updated successfully','message')
+            return render_template('product_edit.html', product=prod)
 
     else: 
         return jsonify({"error":"product not found"}),404
@@ -164,7 +171,7 @@ def admin_login():
         user = next((user for user in users if user['username'] == admin_username and user['password'] == password), None)
         if user :
             session['admin_username'] = user['username']
-            return redirect(url_for('home'))
+            return redirect(url_for('admin'))
         else:
             flash('Invalid username or password!','error')
             return render_template('admin_login.html')
@@ -182,8 +189,24 @@ def admin():
 
 @app.route("/edit")
 def edit_products():
-    # return render_template('admin.html')
-    return render_template('admin_edit.html')
+    with open('products.json','r') as f:
+        products = json.load(f)
+    return render_template('admin_edit.html', products=products)
+
+@app.route("/edit/<int:pid>")
+def product_details(pid):
+    products = loadProduct()
+    prod = None
+
+    for p in products:
+        if p['id'] == pid:
+            prod = p
+            break
+    
+    if prod:
+        return render_template('product_edit.html', product=prod)
+    else:
+        return 404 
 
 @app.route("/delete")
 def delete_products():
