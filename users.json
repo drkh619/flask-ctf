@@ -4,5 +4,11 @@
         "username": "test",
         "email": "test@test.com",
         "password": "scrypt:32768:8:1$3IvfyMkjuT7JvPRq$1bcabf4388fbe97640d59f0865049915864cac5754ac4bda9177d514497fb27c6c7b225fd1af138daa5ad8b7d872b3c46a9dfc407059281991e4047adf8e28a0"
+    },
+    {
+        "id": "be821f85-655a-11ef-9e02-a05950a73590",
+        "username": "tester",
+        "email": "test@test.com",
+        "password": "scrypt:32768:8:1$lrOE3OtFY5NveKVE$8da731d3d508a8d77f8f11cd615363504b36b1984be8fe1ec524090127f24d7acab1d11c2a3993c18b9ee00f1a55aa2e5c2367e4f23d1c15aa360abe8f08a915"
     }
 ]

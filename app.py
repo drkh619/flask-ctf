@@ -126,7 +126,8 @@ def login():
             session['username'] = user['username']
             return redirect(url_for('home'))
         else:
-            return 'Invalid username or password!',401
+            flash('Invalid username or password!','error')
+            return render_template('login.html')
     return render_template('login.html')
 
 @app.route("/register",methods=['GET','POST'])
@@ -141,8 +142,8 @@ def register():
         users = load_users()
 
         if any(user['username'] == new_user['username'] for user in users):
-            flash('Usern already exist!','error')
-            return redirect(url_for('register'))
+            flash('User already exist!','error')
+            return render_template(url_for('register'))
         users.append(new_user)
         write_users(users)
         return redirect(url_for('login'))
@@ -165,8 +166,14 @@ def admin_login():
             session['admin_username'] = user['username']
             return redirect(url_for('home'))
         else:
-            return 'Invalid username or password!',401
+            flash('Invalid username or password!','error')
+            return render_template('admin_login.html')
     return render_template('admin_login.html')
+
+@app.route("/admin_logout")
+def admin_logout():
+    session.pop('admin_username',None)
+    return redirect(url_for('admin_login'))
     
 
 @app.route("/admin")

@@ -139,6 +139,13 @@
                     <div class="invalid-feedback">Passwords are not same!</div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Submit</button>
+                {% if get_flashed_messages() %}
+                <div class="alert alert-danger mt-3">
+                    {% for messages in get_flashed_messages() %}
+                        {{ messages }}
+                    {% endfor %}
+                </div>
+                {% endif %}
             </form>
         </div>
     </div>
