@@ -18,7 +18,7 @@
         crossorigin="anonymous"></script>
     <style>
         body {
-            font-family: 'Poppins',sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         header {
@@ -45,17 +45,10 @@
             width: 50%;
         }
 
-        .item-list-vertical {
-            order: 1;
-            width: 10%;
-            overflow-y: auto;
-            margin-top: 50px;
-        }
-
         .item-image-main {
             order: 2;
-            width: 40%;
-            height: 50%;
+            width: 70%;
+            height: 80%;
         }
 
         /* sectioning completed */
@@ -187,30 +180,31 @@
                 </div>
             </div>
         </nav>
+        <div class="mt-6">
+            <section id="product-info">
 
-    <section id="product-info">
-
-        <div class="item-image-parent">
-            <div class="item-image-main">
-                <img src="{{ product.image }}" alt="default" class="rounded mx-auto d-block" />
-            </div>
-        </div>
-
-        <div class="item-info-parent">
-            <!-- main info -->
-            <div class="main-info">
-                <h4>{{ product.title }}</h4>
-                <p>Price: <span id="price">$ {{ product.price }}</span></p>
-            </div>
-
-                <div class="description">
-                    <p>{{ product.description }}</p>
+                <div class="item-image-parent">
+                    <div class="item-image-main">
+                        <img src="{{ product.image }}" alt="default" class="rounded mx-auto d-block" />
+                    </div>
                 </div>
-            </div>
-            <!-- Description -->
+
+                <div class="item-info-parent">
+                    <!-- main info -->
+                    <div class="main-info">
+                        <h4>{{ product.title }}</h4>
+                        <p>Price: <span id="price">$ {{ product.price }}</span></p>
+                    </div>
+
+                    <div class="description">
+                        <p>{{ product.description }}</p>
+                    </div>
+                </div>
+                <!-- Description -->
         </div>
-    </section>
-</div>
+        </section>
+    </div>
+    </div>
 </body>
 
 </html>
