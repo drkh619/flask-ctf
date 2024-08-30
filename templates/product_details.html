@@ -1,10 +1,9 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>E-Com App | Products Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Com App | Product Page</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" href="./static/icon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,51 +13,130 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
     <style>
         body {
-            background-color: #f8f9fa;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins',sans-serif;
         }
 
-        .header {
-            margin-top: 30px;
+        header {
+            height: 15vh;
+            width: 100%;
+            background: lightgray;
+            margin-bottom: 50px;
+        }
+
+        #product-info {
+            display: flex;
+            width: 95%;
+            margin: 0 auto
+        }
+
+        .item-image-parent {
+            order: 1;
+            width: 50%;
+            display: flex;
+        }
+
+        .item-info-parent {
+            order: 2;
+            width: 50%;
+        }
+
+        .item-list-vertical {
+            order: 1;
+            width: 10%;
+            overflow-y: auto;
+            margin-top: 50px;
+        }
+
+        .item-image-main {
+            order: 2;
+            width: 40%;
+            height: 50%;
+        }
+
+        /* sectioning completed */
+
+
+        .thumb-box {
+            width: 75%;
+            margin: 10px auto;
+            background: white;
+            border: 1px solid gray;
+        }
+
+        .thumb-box img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .item-image-main img {
+            width: 100%;
+            height: auto;
+        }
+
+        .thumb-box:hover {
+            cursor: pointer;
+            border-color: #e77600;
+            ;
+            box-shadow: 0px 1px 5px 1px #e77600;
+        }
+
+        /* Item Info */
+        .main-info h4 {
+            font-size: 21px;
+            margin-bottom: 0;
+            font-weight: 400
+        }
+
+        .star-rating {
+            width: 70%;
+            color: gray;
+            font-size: 24px;
+            border-bottom: 0.4px solid rgba(194, 194, 194, 0.829);
+        }
+
+        .star-rating span {
+            color: gold;
+        }
+
+        .main-info p {
+            font-size: 15px;
+            color: gray;
             margin-bottom: 30px;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            color: #343a40;
-            font-weight: bold;
+        #price {
+            color: rgb(168, 14, 14);
+            font-size: 21px;
         }
 
-        .card-img-top {
-            height: 250px;
-            object-fit: contain;
+        /* Select Items */
+
+        .change-color {
+            margin-bottom: 10px;
         }
 
-        .card{
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .change-color .thumb-box {
+            margin: 10px 10px 10px 0;
+            width: 40px;
+            display: inline-block;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        .change-size select {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border-color: rgb(189, 189, 189);
+            margin-top: 10px;
         }
 
-        .cardlink{
-            text-decoration: none;
-        }
-
-        .cardlink:hover{
-            text-decoration: none;
-        }
-
-        .cardlink:active{
-            text-decoration: none;
-        }
-
-        .cardlink:link{
-            text-decoration: none;
+        .description ul {
+            padding-left: 17px;
+            font-size: 15px;
+            line-height: 1.3rem;
         }
     </style>
 </head>
@@ -109,28 +187,30 @@
                 </div>
             </div>
         </nav>
-        <div class="header text-center">
-            <h1>Welcome!</h1>
+
+    <section id="product-info">
+
+        <div class="item-image-parent">
+            <div class="item-image-main">
+                <img src="{{ product.image }}" alt="default" class="rounded mx-auto d-block" />
+            </div>
         </div>
 
-        <div class="row">
-            {% for product in products %}
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                <div class="card mx-auto" onclick="window.location.href = `{{ url_for('product_details',pid=product.id) }}`">
-                    <img src="{{ product.image }}" class="card-img-top" alt="{{ product.title }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ product.title }}</h5>
-                        <p class="card-text">$ {{ product.price }}</p>
-                        <button class="btn btn-primary w-100">Buy Now</button>
-                    </div>
+        <div class="item-info-parent">
+            <!-- main info -->
+            <div class="main-info">
+                <h4>{{ product.title }}</h4>
+                <p>Price: <span id="price">$ {{ product.price }}</span></p>
+            </div>
+
+                <div class="description">
+                    <p>{{ product.description }}</p>
                 </div>
             </div>
-            {% endfor %}
+            <!-- Description -->
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-        </script>
+    </section>
+</div>
 </body>
 
 </html>

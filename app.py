@@ -113,6 +113,21 @@ def products():
         products = json.load(f)
     return render_template('products.html', products=products)
 
+@app.route("/product/<int:pid>")
+def product_details(pid):
+    products = loadProduct()
+    prod = None
+
+    for p in products:
+        if p['id'] == pid:
+            prod = p
+            break
+    
+    if prod:
+        return render_template('product_details.html', product=prod)
+    else:
+        return 404 
+
 @app.route("/about")
 def about():
     return render_template('about.html')
@@ -194,7 +209,7 @@ def edit_products():
     return render_template('admin_edit.html', products=products)
 
 @app.route("/edit/<int:pid>")
-def product_details(pid):
+def product_edit(pid):
     products = loadProduct()
     prod = None
 
