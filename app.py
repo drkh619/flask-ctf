@@ -31,6 +31,14 @@ def write_users(users):
     with open('users.json','w', encoding='utf-8') as files:
         json.dump(users, files, indent=4)
 
+def load_cart():
+    with open('cart.json','r', encoding='utf-8') as files:
+        return json.load(files)
+
+def write_cart(cart_item):
+    with open('cart.json','w', encoding='utf-8') as files:
+        json.dump(cart_item, files, indent=4)
+
 
 
 @app.route("/api/products",methods=['GET'])
@@ -146,6 +154,7 @@ def login():
         user = next((user for user in users if user['username'] == username), None)
         if user and check_password_hash(user['password'],password):
             session['username'] = user['username']
+            session['uid'] = user['id']
             return redirect(url_for('home'))
         else:
             flash('Invalid username or password!','error')
@@ -175,6 +184,65 @@ def register():
 def logout():
     session.pop('username',None)
     return redirect(url_for('login'))
+
+#here
+@app.route("/add_to_cart/<int:pid>", methods=['POST'])
+def add_product_to_cart(pid):
+    if 'username' not in session:
+        flash('Please log in to add products to your cart!', 'error')
+        return redirect(url_for('login'))
+    
+    user_id = session['uid']
+    products = loadProduct()
+    product = next((p for p in products if p['id'] == pid), None)
+    
+    if not product:
+        flash('Product not found!', 'error')
+        return redirect(url_for('products'))
+
+    cart = load_cart()
+
+    if not isinstance(cart, dict):
+        cart = {} 
+
+    # If user has no cart yet, initialize it
+    if user_id not in cart:
+        cart[user_id] = []
+
+    # Check if the product is already in the user's cart
+    cart_item = next((item for item in cart[user_id] if item['id'] == pid), None)
+    
+    if cart_item:
+        # If the product is already in the cart, increase the quantity
+        cart_item['quantity'] += request.form.get('quantity', 1, type=int)
+    else:
+        # Add new product to the cart
+        cart_item = {
+            "id": product['id'],
+            "name": product['title'],
+            "price": product['price'],
+            "image": product['image'], 
+            "quantity": request.form.get('quantity', 1, type=int)
+        }
+        cart[user_id].append(cart_item)
+
+    write_cart(cart)
+    flash('Product added to cart successfully!', 'message')
+    return redirect(url_for('cart'))
+
+@app.route("/cart")
+def cart():
+    if 'uid' not in session:
+        flash('Please log in to view your cart!', 'error')
+        return redirect(url_for('login'))
+
+    user_id = session['uid']
+    cart = load_cart()
+
+    cart_items = cart.get(user_id, [])
+    return render_template('cart.html', cart_items=cart_items)
+
+#to here
 
 @app.route("/admin_login",methods=['GET','POST'])
 def admin_login():
