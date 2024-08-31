@@ -240,7 +240,9 @@ def cart():
     cart = load_cart()
 
     cart_items = cart.get(user_id, [])
-    return render_template('cart.html', cart_items=cart_items)
+    total = sum(item.get('price', 0) * item.get('quantity', 0) for item in cart_items)
+    
+    return render_template('cart.html', cart_items=cart_items, total=total)
 
 #to here
 
