@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, url_for, redirect, session, flash
+from flask import Flask, jsonify, request, render_template, url_for, redirect, session, flash, Response
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
@@ -189,8 +189,9 @@ def logout():
 @app.route("/add_to_cart/<int:pid>", methods=['POST'])
 def add_product_to_cart(pid):
     if 'username' not in session:
-        flash('Please log in to add products to your cart!', 'error')
-        return redirect(url_for('login'))
+        # flash('Please log in to add products to your cart!', 'error')
+        # return redirect(url_for('product_details',pid=pid))
+        return Response(status=204)
     
     user_id = session['uid']
     products = loadProduct()
@@ -227,7 +228,7 @@ def add_product_to_cart(pid):
         cart[user_id].append(cart_item)
 
     write_cart(cart)
-    flash('Product added to cart successfully!', 'message')
+    # flash('Product added to cart successfully!', 'message')
     return redirect(url_for('cart'))
 
 @app.route("/cart")
