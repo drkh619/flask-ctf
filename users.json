@@ -10,5 +10,11 @@
         "username": "tester",
         "email": "test@test.com",
         "password": "scrypt:32768:8:1$lrOE3OtFY5NveKVE$8da731d3d508a8d77f8f11cd615363504b36b1984be8fe1ec524090127f24d7acab1d11c2a3993c18b9ee00f1a55aa2e5c2367e4f23d1c15aa360abe8f08a915"
+    },
+    {
+        "id": "a724b294-6947-11ef-8fd0-00155d532bec",
+        "username": "user",
+        "email": "test23@rr.com",
+        "password": "scrypt:32768:8:1$0T9je9zUtQJpWRiX$c15e38b8bbd2a60481cd40384be651c8158bf2eec53552db42a4f151fb684bb834584bec8e89023770d54717fbae502bde7d1ff80028a4058ca8474c03cfaaf8"
     }
 ]

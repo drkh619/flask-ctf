@@ -119,7 +119,11 @@
             </div>
         </nav>
         <div class="header text-center">
+            {% if 'username' in session %}
+            <h1>Welcome {{ session['username'] }}!</h1>
+            {% else %}
             <h1>Welcome!</h1>
+            {% endif %}
         </div>
 
         <div class="row">
