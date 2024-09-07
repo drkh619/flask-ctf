@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, render_template, url_for, redirect, session, flash, Response
+import markdown
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
@@ -38,6 +39,10 @@ def load_cart():
 def write_cart(cart_item):
     with open('cart.json','w', encoding='utf-8') as files:
         json.dump(cart_item, files, indent=4)
+
+def load_files(filename):
+    with open(file=filename,mode='r',encoding='utf-8') as f:
+        return f.read()
 
 
 
@@ -136,9 +141,14 @@ def product_details(pid):
     else:
         return 404 
 
-@app.route("/about")
-def about():
-    return render_template('about.html')
+@app.route("/about/<fname>")
+def about(fname):
+    if not fname:
+        # Handle missing filename (e.g., return a default message)
+        return render_template('about.html', markdown_content="# No file specified")
+    content = load_files(fname)
+    html_content = markdown.markdown(content)
+    return render_template('about.html',markdown_content=html_content)
 
 @app.route("/contact")
 def contact():
