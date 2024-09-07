@@ -141,8 +141,10 @@ def product_details(pid):
     else:
         return 404 
 
-@app.route("/about/<fname>")
-def about(fname):
+@app.route("/about")
+def about():
+    
+    fname = request.args.get('file')
     if not fname:
         # Handle missing filename (e.g., return a default message)
         return render_template('about.html', markdown_content="# No file specified")
