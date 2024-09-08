@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, url_for, redirect, session, flash, Response
+from flask import Flask, jsonify, request, render_template, url_for, redirect, session, flash, Response, abort
 import markdown
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,17 +11,17 @@ CORS(app)
 app.secret_key = '50M3tH1nG_53cR3T'
 
 def loadProduct():
-    # with open('products.json','r', encoding='utf-8') as files:
+    # with open('./data/products.json','r', encoding='utf-8') as files:
     #     return json.load(files)
-    file = open('products.json','r',encoding='utf-8')
+    file = open('./data/products.json','r',encoding='utf-8')
     return json.load(file)
 
 def writeProduct(products):
-    file = open('products.json','w',encoding='utf-8')
+    file = open('./data/products.json','w',encoding='utf-8')
     json.dump(products,file,indent=4)
 
 def load_users():
-    with open('users.json','r', encoding='utf-8') as files:
+    with open('./data/users.json','r', encoding='utf-8') as files:
         return json.load(files)
     
 def load_admin():
@@ -29,20 +29,24 @@ def load_admin():
         return json.load(files)
     
 def write_users(users):
-    with open('users.json','w', encoding='utf-8') as files:
+    with open('./data/users.json','w', encoding='utf-8') as files:
         json.dump(users, files, indent=4)
 
 def load_cart():
-    with open('cart.json','r', encoding='utf-8') as files:
+    with open('./data/cart.json','r', encoding='utf-8') as files:
         return json.load(files)
 
 def write_cart(cart_item):
-    with open('cart.json','w', encoding='utf-8') as files:
+    with open('./data/cart.json','w', encoding='utf-8') as files:
         json.dump(cart_item, files, indent=4)
 
 def load_files(filename):
-    with open(file=filename,mode='r',encoding='utf-8') as f:
-        return f.read()
+    try:
+        with open(file=filename, mode='r', encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        # Return a custom message if the file does not exist
+        return "notfound"
 
 
 
@@ -122,7 +126,7 @@ def home():
 
 @app.route("/products")
 def products():
-    with open('products.json', 'r') as f:
+    with open('./data/products.json', 'r') as f:
         products = json.load(f)
     return render_template('products.html', products=products)
 
@@ -146,9 +150,13 @@ def about():
     
     fname = request.args.get('file')
     if not fname:
+        content = load_files('about.md')
+        html_content = markdown.markdown(content)
         # Handle missing filename (e.g., return a default message)
-        return render_template('about.html', markdown_content="# No file specified")
+        return render_template('about.html', markdown_content=html_content)
     content = load_files(fname)
+    if content == 'notfound':
+        abort (404)
     html_content = markdown.markdown(content)
     return render_template('about.html',markdown_content=html_content)
 
@@ -287,7 +295,7 @@ def admin():
 
 @app.route("/edit")
 def edit_products():
-    with open('products.json','r') as f:
+    with open('./data/products.json','r') as f:
         products = json.load(f)
     return render_template('admin_edit.html', products=products)
 
@@ -308,7 +316,7 @@ def product_edit(pid):
 
 @app.route("/delete")
 def delete_products():
-    with open('products.json', 'r') as f:
+    with open('./data/products.json', 'r') as f:
         products = json.load(f)
     return render_template('admin_delete.html', products=products)
 
