@@ -206,7 +206,7 @@ def logout():
     return redirect(url_for('login'))
 
 #here
-@app.route("/add_to_cart/<int:pid>", methods=['POST'])
+@app.route("/api/cart/add/<int:pid>", methods=['POST'])
 def add_product_to_cart(pid):
     if 'username' not in session:
         # flash('Please log in to add products to your cart!', 'error')
