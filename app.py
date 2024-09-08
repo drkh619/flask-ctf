@@ -10,6 +10,8 @@ app = Flask(__name__, static_url_path='/static')
 CORS(app)
 app.secret_key = '50M3tH1nG_53cR3T'
 
+
+
 def loadProduct():
     # with open('./data/products.json','r', encoding='utf-8') as files:
     #     return json.load(files)
