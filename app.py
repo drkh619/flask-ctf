@@ -16,7 +16,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 def loadProduct():
     # with open('./data/products.json','r', encoding='utf-8') as files:
-    #     return json.load(files)
+    #     return json.load(files)   
     file = open('./data/products.json','r',encoding='utf-8')
     return json.load(file)
 
@@ -266,6 +266,24 @@ def add_product_to_cart(pid):
 
     write_cart(cart)
     # flash('Product added to cart successfully!', 'message')
+    return redirect(url_for('cart'))
+
+@app.route("/api/cart/delete/<int:item_id>", methods=['POST'])
+def remove_cart(item_id):
+    if 'uid' not in session:
+        return redirect(url_for('products'))
+    
+    user_id = session['uid']
+    cart = load_cart()
+    user_cart = cart.get(user_id)
+
+    updated_cart = [item for item in user_cart if item['id'] != item_id]
+    if len(updated_cart) == len(user_cart):
+        return jsonify({"error": "Product not found in your cart"}), 404
+    
+    cart[user_id] = updated_cart
+
+    write_cart(cart)
     return redirect(url_for('cart'))
 
 @app.route("/cart")
