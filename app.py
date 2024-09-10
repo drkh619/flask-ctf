@@ -2,7 +2,9 @@ from flask import Flask, jsonify, request, render_template, url_for, redirect, s
 import markdown
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import timedelta
+from datetime import timedelta, datetime #implementation for jwt
+import jwt # jwt
+from functools import wraps # jwt
 import uuid
 import json
 # import requests
