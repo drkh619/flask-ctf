@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, render_template, url_for, redirect, s
 import markdown
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import timedelta
 import uuid
 import json
 # import requests
@@ -9,6 +10,7 @@ import json
 app = Flask(__name__, static_url_path='/static')
 CORS(app)
 app.secret_key = '50M3tH1nG_53cR3T'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 
 
@@ -59,6 +61,9 @@ def prod():
 
 @app.route("/api/products",methods=['POST'])
 def createProd():
+    if 'admin_username' not in session:
+        return abort(403)
+
     new_product = request.form.to_dict()
     new_product['price'] = float(new_product['price'])
 
@@ -96,7 +101,11 @@ def updateProductById(pid):
             break
 
     if prod:
-        updated_prod = request.form.to_dict()
+        if request.is_json:
+            updated_prod = request.get_json()
+        else:
+            updated_prod = request.form.to_dict()
+        
         updated_prod['price'] = float(updated_prod['price'])
         prod.update(updated_prod)
         writeProduct(products)
@@ -111,6 +120,9 @@ def updateProductById(pid):
 
 @app.route("/api/products/<int:pid>",methods=['DELETE'])
 def deleteProductById(pid):
+    if 'admin_username' not in session:
+        return abort(403)
+
     products = loadProduct()
 
     updatedList = list(filter(lambda p: p["id"] != pid, products))
@@ -177,6 +189,9 @@ def login():
         if user and check_password_hash(user['password'],password):
             session['username'] = user['username']
             session['uid'] = user['id']
+
+            session.permanent = True #session expiry
+
             return redirect(url_for('home'))
         else:
             flash('Invalid username or password!','error')
@@ -279,6 +294,8 @@ def admin_login():
         user = next((user for user in users if user['username'] == admin_username and user['password'] == password), None)
         if user :
             session['admin_username'] = user['username']
+            session.permanent = True
+
             return redirect(url_for('admin'))
         else:
             flash('Invalid username or password!','error')
