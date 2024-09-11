@@ -172,12 +172,13 @@
 
                             {% endfor %}
                         </ol>
-                        <div class="row row-cols-1 row-cols-md-3 g-2">
-                            <h5 class="card-text mt-4 col">Total: $ {{ total }}</h5>
-                            <div class="col"></div>
-                            <button type="button" class="btn btn-warning col mt-4">Checkout</button>
-
-                        </div>
+                        <form action="{{ url_for('checkout') }}" method="post">
+                            <div class="row row-cols-1 row-cols-md-3 g-2">
+                                <h5 class="card-text mt-4 col">Total: $ {{ total }}</h5>
+                                <div class="col"></div>
+                                <button type="submit" class="btn btn-warning col mt-4">Checkout</button>
+                            </div>
+                        </form>
 
                     </div>
                 </div>

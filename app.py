@@ -280,7 +280,7 @@ def remove_cart(item_id):
     updated_cart = [item for item in user_cart if item['id'] != item_id]
     if len(updated_cart) == len(user_cart):
         return jsonify({"error": "Product not found in your cart"}), 404
-    
+        
     cart[user_id] = updated_cart
 
     write_cart(cart)
@@ -301,6 +301,20 @@ def cart():
     return render_template('cart.html', cart_items=cart_items, total=total)
 
 #to here
+
+@app.route("/api/checkout",methods=['POST'])
+def checkout():
+    if 'uid' not in session:
+        flash('Please log in to view your cart!', 'error')
+        return redirect(url_for('login'))
+    
+    user_id = session['uid']
+    cart = load_cart()
+    # user_cart = cart.get(user_id)
+    
+    cart[user_id] = []
+    write_cart(cart)
+    return redirect(url_for('cart'))
 
 @app.route("/admin_login",methods=['GET','POST'])
 def admin_login():
