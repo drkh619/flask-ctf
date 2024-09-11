@@ -314,7 +314,9 @@ def checkout():
     
     cart[user_id] = []
     write_cart(cart)
-    return redirect(url_for('cart'))
+    return redirect(url_for('cart')) # TODO Add product rating and redirect there with the
+# TODO rating should take id's that user ordered and give a valid rating or no rating at all. It should send a PUT req to
+# the edit endpoint and add rating and count!
 
 @app.route("/admin_login",methods=['GET','POST'])
 def admin_login():
