@@ -310,10 +310,14 @@ def checkout():
     
     user_id = session['uid']
     cart = load_cart()
-    # user_cart = cart.get(user_id)
+    user_cart = cart.get(user_id)
+
+    item_ids = [item['id'] for item in user_cart]
     
     cart[user_id] = []
     write_cart(cart)
+    session['item_ids'] = item_ids
+
     return redirect(url_for('cart')) # TODO Add product rating and redirect there with the
 # TODO rating should take id's that user ordered and give a valid rating or no rating at all. It should send a PUT req to
 # the edit endpoint and add rating and count!
