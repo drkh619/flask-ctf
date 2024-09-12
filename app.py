@@ -315,10 +315,14 @@ def checkout():
     user_cart = cart.get(user_id)
 
     item_ids = [item['id'] for item in user_cart]
+
+    if 'item_ids' in session:
+        session['item_ids'].extend(item_ids)
+    else:
+        session['item_ids'] = item_ids
     
     cart[user_id] = []
     write_cart(cart)
-    session['item_ids'] = item_ids
 
     return redirect(url_for('rating')) # TODO Add product rating and redirect there with the
 # TODO rating should take id's that user ordered and give a valid rating or no rating at all. It should send a PUT req to
