@@ -322,6 +322,19 @@ def checkout():
 # TODO rating should take id's that user ordered and give a valid rating or no rating at all. It should send a PUT req to
 # the edit endpoint and add rating and count!
 
+@app.route("/rate")
+def rating():
+    if 'item_ids' not in session:
+        return redirect(url_for('cart'))
+    
+    products = loadProduct()
+    item_id = session['item_ids']
+
+    rated_products = [product for product in products if product['id'] in item_id]
+
+    return render_template('rating.html',products=rated_products)
+
+
 @app.route("/admin_login",methods=['GET','POST'])
 def admin_login():
     if request.method == 'POST':
