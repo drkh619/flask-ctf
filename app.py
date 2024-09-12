@@ -220,6 +220,8 @@ def register():
 @app.route("/logout")
 def logout():
     session.pop('username',None)
+    session.pop('uid',None)
+    session.pop('item_ids',None)
     return redirect(url_for('login'))
 
 #here
@@ -322,7 +324,7 @@ def checkout():
 # TODO rating should take id's that user ordered and give a valid rating or no rating at all. It should send a PUT req to
 # the edit endpoint and add rating and count!
 
-@app.route("/rate")
+@app.route("/rate",methods=['GET','POST'])
 def rating():
     if 'item_ids' not in session:
         return redirect(url_for('cart'))

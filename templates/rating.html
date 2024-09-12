@@ -36,7 +36,7 @@
             object-fit: contain;
         }
 
-        .card{
+        .card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -45,20 +45,80 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .cardlink{
+        .cardlink {
             text-decoration: none;
         }
 
-        .cardlink:hover{
+        .cardlink:hover {
             text-decoration: none;
         }
 
-        .cardlink:active{
+        .cardlink:active {
             text-decoration: none;
         }
 
-        .cardlink:link{
+        .cardlink:link {
             text-decoration: none;
+        }
+
+        /* rating */
+
+        .rate {
+            border-bottom-right-radius: 12px;
+            border-bottom-left-radius: 12px
+        }
+
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center
+        }
+
+        .rating>input {
+            display: none
+        }
+
+        .rating>label {
+            position: relative;
+            width: 1em;
+            font-size: 30px;
+            font-weight: 300;
+            color: #FFD600;
+            cursor: pointer
+        }
+
+        .rating>label::before {
+            content: "\2605";
+            position: absolute;
+            opacity: 0
+        }
+
+        .rating>label:hover:before,
+        .rating>label:hover~label:before {
+            opacity: 1 !important
+        }
+
+        .rating>input:checked~label:before {
+            opacity: 1
+        }
+
+        .rating:hover>input:checked~label:before {
+            opacity: 0.4
+        }
+
+        .buttons {
+            top: 36px;
+            position: relative
+        }
+
+        .rating-submit {
+            border-radius: 8px;
+            color: #fff;
+            height: auto
+        }
+
+        .rating-submit:hover {
+            color: #fff
         }
     </style>
 </head>
@@ -96,24 +156,27 @@
                     </ul>
                     <ul class="d-flex navbar-nav me-5">
                         <li class="nav-item">
-                            <a href="{{ url_for('cart') }}" class="nav-link icon-link icon-link-hover"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                              </svg> Cart
+                            <a href="{{ url_for('cart') }}" class="nav-link icon-link icon-link-hover"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-cart" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                                </svg> Cart
                             </a>
                         </li>
                     </ul>
-                        {% else %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Login/Register
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('register') }}">Register</a></li>
-                            </ul>
-                        </li>
-                        {% endif %}
+                    {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Login/Register
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('register') }}">Register</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
                     </ul>
                 </div>
             </div>
@@ -126,8 +189,17 @@
                     <img src="{{ product.image }}" class="card-img-top" alt="{{ product.title }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ product.title }}</h5>
-                        <p class="card-text">$ {{ product.price }}</p>
-                        <button class="btn btn-primary w-100">View Product</button>
+                        <div class=" d-flex justify-content-center mt-3">
+                            <div class=" text-center mb-3">
+                                <div class="rating"> <input type="radio" name="rating" value="5" id="5"><label
+                                        for="5">☆</label> <input type="radio" name="rating" value="4" id="4"><label
+                                        for="4">☆</label> <input type="radio" name="rating" value="3" id="3"><label
+                                        for="3">☆</label> <input type="radio" name="rating" value="2" id="2"><label
+                                        for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label
+                                        for="1">☆</label> </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-warning w-100">Submit</button>
                     </div>
                 </div>
             </div>
