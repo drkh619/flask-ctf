@@ -10,7 +10,7 @@ import json
 app = Flask(__name__, static_url_path='/static')
 CORS(app)
 app.secret_key = '50M3tH1nG_53cR3T'
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 
 
 
@@ -328,6 +328,8 @@ def checkout():
 # TODO rating should take id's that user ordered and give a valid rating or no rating at all. It should send a PUT req to
 # the edit endpoint and add rating and count!
 
+
+# TODO We need to store this file to rating.json instead of session. Becuase session gets popped if not handled correctly or leak maybe found
 @app.route("/rate",methods=['GET','POST'])
 def rating():
     if 'item_ids' not in session:

@@ -182,33 +182,78 @@
             </div>
         </nav>
 
-        <div class="row">
-            {% for product in products %}
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                <div class="card mx-auto">
-                    <img src="{{ product.image }}" class="card-img-top" alt="{{ product.title }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ product.title }}</h5>
-                        <div class=" d-flex justify-content-center mt-3">
-                            <div class=" text-center mb-3">
-                                <div class="rating"> <input type="radio" name="rating" value="5" id="5"><label
-                                        for="5">☆</label> <input type="radio" name="rating" value="4" id="4"><label
-                                        for="4">☆</label> <input type="radio" name="rating" value="3" id="3"><label
-                                        for="3">☆</label> <input type="radio" name="rating" value="2" id="2"><label
-                                        for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label
-                                        for="1">☆</label> </div>
+        <form id="ratings-form">
+            <div class="row justify-content-center mt-5">
+                {% for product in products %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="card mx-auto">
+                        <img src="{{ product.image }}" class="card-img-top" alt="{{ product.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <div class=" d-flex justify-content-center mt-3">
+                                <div class=" text-center mb-3">
+                                    <div class="rating"> <input type="radio" name="{{ product.id }}" value="5" id="5">
+                                        <input type="radio" name="rating_{{ product.id }}" value="5"
+                                            id="5_{{ product.id }}"><label for="5_{{ product.id }}">☆</label>
+                                        <input type="radio" name="rating_{{ product.id }}" value="4"
+                                            id="4_{{ product.id }}"><label for="4_{{ product.id }}">☆</label>
+                                        <input type="radio" name="rating_{{ product.id }}" value="3"
+                                            id="3_{{ product.id }}"><label for="3_{{ product.id }}">☆</label>
+                                        <input type="radio" name="rating_{{ product.id }}" value="2"
+                                            id="2_{{ product.id }}"><label for="2_{{ product.id }}">☆</label>
+                                        <input type="radio" name="rating_{{ product.id }}" value="1"
+                                            id="1_{{ product.id }}"><label for="1_{{ product.id }}">☆</label>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
-                        <button class="btn btn-warning w-100">Submit</button>
                     </div>
                 </div>
+                {% endfor %}
+                <div class="row justify-content-center">
+                    <button id="submit-ratings" class="col-2 btn btn-warning w-20">Submit</button>
+                </div>
             </div>
-            {% endfor %}
-        </div>
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         </script>
+
+    <script>
+        document.getElementById('submit-ratings').addEventListener('click', function (event) {
+            event.preventDefault();
+            var valid = true;
+            var cards = document.querySelectorAll('.card');
+
+            cards.forEach(function (card) {
+                var ratings = card.querySelectorAll('input[type="radio"]');
+                var rated = false;
+
+                ratings.forEach(function (rating) {
+                    if (rating.checked) {
+                        rated = true;
+                    }
+                });
+
+                if (!rated) {
+                    card.classList.add('border-danger');
+                    card.classList.add('border-3');
+                    valid = false;
+                } else {
+                    card.classList.remove('border-danger');
+                    card.classList.remove('border-3');
+                }
+            });
+
+            if (valid) {
+                // Submit the form or perform the desired action here
+                document.getElementById('ratings-form').submit();
+            }
+        });
+    </script>
+
 </body>
 
 </html>
