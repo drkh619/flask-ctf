@@ -44,6 +44,14 @@ def write_cart(cart_item):
     with open('./data/cart.json','w', encoding='utf-8') as files:
         json.dump(cart_item, files, indent=4)
 
+def load_rating():
+    with open('./data/rating.json','r', encoding='utf-8') as files:
+        return json.load(files)
+
+def write_rating(cart_item):
+    with open('./data/rating.json','w', encoding='utf-8') as files:
+        json.dump(cart_item, files, indent=4)
+
 def load_files(filename):
     try:
         with open(file=filename, mode='r', encoding='utf-8') as f:
@@ -314,12 +322,22 @@ def checkout():
     cart = load_cart()
     user_cart = cart.get(user_id)
 
+    if not user_cart:
+        flash('Your cart is empty.', 'error')
+        return redirect(url_for('products'))
+    
+    # Load the current ratings from the file
+    ratings = load_rating() 
+
     item_ids = [item['id'] for item in user_cart]
 
-    if 'item_ids' in session:
-        session['item_ids'].extend(item_ids)
+    if user_id in ratings:
+        ratings[user_id].extend(item_ids)  # Append new items to the user's existing list
     else:
-        session['item_ids'] = item_ids
+        ratings[user_id] = item_ids  # Create a new entry for the user if it doesn't exist
+
+    # Save the updated ratings to the file
+    write_rating(ratings)
     
     cart[user_id] = []
     write_cart(cart)
@@ -332,11 +350,19 @@ def checkout():
 # TODO We need to store this file to rating.json instead of session. Becuase session gets popped if not handled correctly or leak maybe found
 @app.route("/rate",methods=['GET','POST'])
 def rating():
-    if 'item_ids' not in session:
+    if 'uid' not in session:
+        flash("Please login to rate products.")
+        return render_template('login.html')
+
+    user_id = session['uid']
+    rating = load_rating()
+    user_rating = rating.get(user_id)
+
+    if not user_rating:
         return redirect(url_for('cart'))
     
     products = loadProduct()
-    item_id = session['item_ids']
+    item_id = user_rating
 
     rated_products = [product for product in products if product['id'] in item_id]
 
