@@ -192,11 +192,16 @@ def login():
         username = request.form['username']
         password = request.form['password']
         users = load_users()
+        rating = load_rating()
+        
 
         user = next((user for user in users if user['username'] == username), None)
         if user and check_password_hash(user['password'],password):
             session['username'] = user['username']
             session['uid'] = user['id']
+            user_rating = rating.get(user['id'])
+            if user_rating:
+                session['rate'] = len(user_rating)
 
             session.permanent = True #session expiry
 
@@ -229,7 +234,7 @@ def register():
 def logout():
     session.pop('username',None)
     session.pop('uid',None)
-    session.pop('item_ids',None)
+    session.pop('rate',None)
     return redirect(url_for('login'))
 
 #here
