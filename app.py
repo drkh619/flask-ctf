@@ -343,6 +343,9 @@ def checkout():
 
     # Save the updated ratings to the file
     write_rating(ratings)
+    user_rating = ratings.get(user_id)
+    if user_rating:
+        session['rate'] = len(user_rating)
     
     cart[user_id] = []
     write_cart(cart)

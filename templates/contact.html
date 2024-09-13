@@ -86,7 +86,7 @@
                         </li>
                         {% if 'rate' in session %}
                         <li class="nav-item"></li>
-                            <a class="nav-link" href="{{url_for('rating')}}">Rate Products</a>
+                        <a class="nav-link" href="{{url_for('rating')}}">Rate Products</a>
                         </li>
                         {% endif %}
 
@@ -97,23 +97,26 @@
                     </ul>
                     <ul class="d-flex navbar-nav me-5">
                         <li class="nav-item">
-                            <a href="{{ url_for('cart') }}" class="nav-link icon-link icon-link-hover"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                              </svg> Cart</a>
+                            <a href="{{ url_for('cart') }}" class="nav-link icon-link icon-link-hover"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-cart" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                                </svg> Cart</a>
                         </li>
                     </ul>
-                        {% else %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Login/Register
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('register') }}">Register</a></li>
-                            </ul>
-                        </li>
-                        {% endif %}
+                    {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Login/Register
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('register') }}">Register</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
                     </ul>
                 </div>
             </div>
@@ -123,27 +126,26 @@
             <p>+91 9999988888</p>
         </div>
 
-        <div class="form-container mx-auto" style="max-width: 500px;">
-
-            <div class="mb-3">
-                <label for="Email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="email" required>
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        <form>
+            <div class="form-container mx-auto" style="max-width: 500px;">
+                <div class="mb-3">
+                    <label for="Email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="email" required>
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="feedback" class="form-label">Your Message</label>
+                    <textarea class="form-control" id="feedback" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" id="submitButton">Submit</button>
+                <span id="alert">
+                </span>
             </div>
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" required>
-            </div>
-            <div class="mb-3">
-                <label for="feedback" class="form-label">Your Message</label>
-                <textarea class="form-control" id="feedback" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary w-100" id="submitButton">Submit</button>
-            <span id="alert">
-
-            </span>
-
-        </div>
+        </form>
 
     </div>
 
@@ -155,7 +157,9 @@
 
             let isValid = true;
 
-            if (!emailInput.value) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailInput.value || !emailPattern.test(emailInput.value)) {
                 emailInput.classList.add('is-invalid');
                 isValid = false;
             } else {
@@ -194,6 +198,10 @@
             ].join('');
 
             alertPlaceholder.append(wrapper);
+
+            document.getElementById('exampleInputEmail1').value = '';
+            document.getElementById('name').value = '';
+            document.getElementById('feedback').value = '';
 
             const alertElement = alertPlaceholder.querySelector('.alert');
             alertElement.style.display = 'block'; // Show the alert initially
