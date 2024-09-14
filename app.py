@@ -356,7 +356,7 @@ def checkout():
 
 
 # TODO We need to store this file to rating.json instead of session. Becuase session gets popped if not handled correctly or leak maybe found
-@app.route("/rate",methods=['GET','POST'])
+@app.route("/rate", methods=['GET', 'POST'])
 def rating():
     if 'uid' not in session:
         flash("Please login to rate products.")
@@ -368,13 +368,51 @@ def rating():
 
     if not user_rating:
         return redirect(url_for('cart'))
-    
+
     products = loadProduct()
     item_id = user_rating
-
     rated_products = [product for product in products if product['id'] in item_id]
 
-    return render_template('rating.html',products=rated_products)
+    if request.method == 'POST':
+        product_rating = request.form.to_dict()
+
+        # Load the entire product.json file
+        products = loadProduct()
+
+        for product in products:
+            product_id = str(product['id'])
+            if product_id in product_rating:
+                new_rating = int(product_rating[product_id])
+
+                # Update the product rating
+                old_rating = product['rating']['rate']
+                old_count = product['rating']['count']
+
+                # Calculate the new rating
+                total_rating = old_rating * old_count
+                new_total = total_rating + new_rating
+                new_count = old_count + 1
+                new_rate = new_total / new_count
+
+                # Update the product in the loaded product list
+                product['rating']['rate'] = round(new_rate, 1)
+                product['rating']['count'] = new_count
+
+        # Write the updated product list back to product.json
+        writeProduct(products)  # Pass the full product list to be written back
+
+        # Clear user's rating from rating.json
+        rating[user_id] = []
+        write_rating(rating)
+
+        # Remove the 'rate' session key after rating is submitted
+        session.pop('rate', None)
+
+        flash("Thanks for your rating")
+        return redirect(url_for('home'))
+
+    return render_template('rating.html', products=rated_products)
+
 
 
 @app.route("/admin_login",methods=['GET','POST'])
