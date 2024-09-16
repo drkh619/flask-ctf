@@ -379,24 +379,29 @@ def rating():
         # Load the entire product.json file
         products = loadProduct()
 
-        for product in products:
-            product_id = str(product['id'])
-            if product_id in product_rating:
-                new_rating = int(product_rating[product_id])
+        # Loop through form data to update product ratings
+        for key, value in product_rating.items():
+            if key.startswith("rating_"):
+                product_id = key.split("_")[1]  # Extract the product ID
+                new_rating = int(value)  # Convert rating value from string to integer
 
-                # Update the product rating
-                old_rating = product['rating']['rate']
-                old_count = product['rating']['count']
+                # Find the product with this ID in the products list
+                for product in products:
+                    if str(product['id']) == product_id:
+                        # Update the product rating
+                        old_rating = product['rating']['rate']
+                        old_count = product['rating']['count']
 
-                # Calculate the new rating
-                total_rating = old_rating * old_count
-                new_total = total_rating + new_rating
-                new_count = old_count + 1
-                new_rate = new_total / new_count
+                        # Calculate the new rating
+                        total_rating = old_rating * old_count
+                        new_total = total_rating + new_rating
+                        new_count = old_count + 1
+                        new_rate = new_total / new_count
 
-                # Update the product in the loaded product list
-                product['rating']['rate'] = round(new_rate, 1)
-                product['rating']['count'] = new_count
+                        # Update the product in the loaded product list
+                        product['rating']['rate'] = round(new_rate, 1)
+                        product['rating']['count'] = new_count
+                        break  # Stop the loop once the product is found
 
         # Write the updated product list back to product.json
         writeProduct(products)  # Pass the full product list to be written back
@@ -412,7 +417,6 @@ def rating():
         return redirect(url_for('home'))
 
     return render_template('rating.html', products=rated_products)
-
 
 
 @app.route("/admin_login",methods=['GET','POST'])
