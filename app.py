@@ -168,7 +168,7 @@ def product_details(pid):
             print("Hello flag")
         return render_template('product_details.html', product=prod)
     else:
-        return 404 
+        abort(404) 
 
 @app.route("/about")
 def about():
