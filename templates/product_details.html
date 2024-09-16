@@ -267,6 +267,9 @@
                         </div>
                         <button type="submit" class="btn btn-warning mt-3" id="liveToastBtn">Add to Cart</button>
                     </form>
+                    {% for messages in get_flashed_messages() %}
+                        {{ messages | safe}}
+                    {% endfor %}
                     {% if 'username' not in session %}
                     <div class="toast-container position-fixed bottom-0 end-0 p-3">
                         <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -285,6 +288,7 @@
                     </div>
                     {% endif %}
                 </div>
+                
                 <!-- Description -->
         </div>
         </section>

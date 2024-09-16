@@ -163,6 +163,9 @@ def product_details(pid):
             break
     
     if prod:
+        if 'document.cookie' in prod['description']:
+            flash("<div class='alert alert-primary' role='alert'>Congrats! You've found the flag: $FLAG1#37f7c008e19a3e9ea2c82610ce7a36d6c0a3715d</div>")
+            print("Hello flag")
         return render_template('product_details.html', product=prod)
     else:
         return 404 
