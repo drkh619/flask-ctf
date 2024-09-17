@@ -13,6 +13,13 @@ app.secret_key = '50M3tH1nG_53cR3T'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 
 
+whitelist = {
+    "about.md",
+    "/etc/passwd",
+    "../../../../etc/passwd",
+    "./admin.json",
+    "admin.json"
+}
 
 def loadProduct():
     # with open('./data/products.json','r', encoding='utf-8') as files:
@@ -53,6 +60,9 @@ def write_rating(cart_item):
         json.dump(cart_item, files, indent=4)
 
 def load_files(filename):
+    if filename.lower() not in whitelist or not filename.endswith('/etc/passwd'): #Change here if there's any error with lfi
+        return 'notfound'
+
     try:
         with open(file=filename, mode='r', encoding='utf-8') as f:
             return f.read()
@@ -416,7 +426,7 @@ def rating():
         # Remove the 'rate' session key after rating is submitted
         session.pop('rate', None)
 
-        flash("Thanks for your rating")
+        # flash("Thanks for your rating")
         return redirect(url_for('home'))
 
     return render_template('rating.html', products=rated_products)
