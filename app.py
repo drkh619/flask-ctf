@@ -60,7 +60,7 @@ def write_rating(cart_item):
         json.dump(cart_item, files, indent=4)
 
 def load_files(filename):
-    if filename.lower() not in whitelist or not filename.endswith('/etc/passwd'): #Change here if there's any error with lfi
+    if filename.lower() not in whitelist : #Change here if there's any error with lfi
         return 'notfound'
 
     try:
