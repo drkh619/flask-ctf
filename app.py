@@ -487,4 +487,4 @@ def delete_products():
         products = json.load(f)
     return render_template('admin_delete.html', products=products)
 
-app.run(debug=True,port=5000,host='0.0.0.0')
+app.run(port=5000,host='0.0.0.0')

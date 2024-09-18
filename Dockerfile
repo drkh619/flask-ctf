@@ -23,7 +23,7 @@ RUN . /opt/venv/bin/activate && pip install --upgrade pip && pip install -r requ
 EXPOSE 5000
 
 # Add the desired line to /etc/passwd
-RUN echo "$FLAG&LFI" >> /etc/passwd
+RUN echo "FLAG{4b496a74f72607d024dd5a1c5a68839aa9c12c14}" >> /etc/passwd
 
 # Copy the rest of the application code
 COPY . /app
