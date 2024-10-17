@@ -5,7 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 import uuid
 import json
-# import requests
+import bleach
+from bs4 import BeautifulSoup
 
 app = Flask(__name__, static_url_path='/static')
 CORS(app)
@@ -70,8 +71,6 @@ def load_files(filename):
         # Return a custom message if the file does not exist
         return "notfound"
 
-
-
 @app.route("/api/products",methods=['GET'])
 def prod():
     data = loadProduct()
@@ -123,8 +122,9 @@ def updateProductById(pid):
             updated_prod = request.get_json()
         else:
             updated_prod = request.form.to_dict()
-        
+
         updated_prod['price'] = float(updated_prod['price'])
+
         prod.update(updated_prod)
         writeProduct(products)
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -173,7 +173,7 @@ def product_details(pid):
             break
     
     if prod:
-        if 'document.cookie' in prod['description']:
+        if 'alert(document.cookie)' in prod['description']:
             flash("<div class='alert alert-primary' role='alert'>Congrats! You've found the flag: $FLAG1#37f7c008e19a3e9ea2c82610ce7a36d6c0a3715d</div>")
             print("Hello flag")
 
@@ -364,12 +364,9 @@ def checkout():
     cart[user_id] = []
     write_cart(cart)
 
-    return redirect(url_for('rating')) # TODO Add product rating and redirect there with the
-# TODO rating should take id's that user ordered and give a valid rating or no rating at all. It should send a PUT req to
-# the edit endpoint and add rating and count!
+    return redirect(url_for('rating')) 
 
 
-# TODO We need to store this file to rating.json instead of session. Becuase session gets popped if not handled correctly or leak maybe found
 @app.route("/rate", methods=['GET', 'POST'])
 def rating():
     if 'uid' not in session:
@@ -488,4 +485,4 @@ def delete_products():
         products = json.load(f)
     return render_template('admin_delete.html', products=products)
 
-app.run(port=5000,host='0.0.0.0')
+app.run(debug=True,port=5000,host='0.0.0.0')
